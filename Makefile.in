@@ -44,6 +44,7 @@ define LLVM_BUILD_OPENMP
 	        -DLIBOMP_HAVE_Z_NOEXECSTACK_FLAG=On \
 	        -DDISABLE_OMPD_GDB_PLUGIN=On \
 	        -DLIBOMP_OMPD_GDB_SUPPORT=Off \
+	        -DLIBOMP_USE_CANCEL_THREADS=@LIBOMP_USE_CANCEL_THREADS@ \
 	        -DLIBOMP_ENABLE_SHARED=On; \
 	    $(MAKE) -C $(notdir $@)/openmp-shared; \
 	    $(MAKE) -C $(notdir $@)/openmp-shared install; \
@@ -65,6 +66,7 @@ define LLVM_BUILD_OPENMP
 	        -DLIBOMP_HAVE_Z_NOEXECSTACK_FLAG=On \
 	        -DDISABLE_OMPD_GDB_PLUGIN=On \
 	        -DLIBOMP_OMPD_GDB_SUPPORT=Off \
+	        -DLIBOMP_USE_CANCEL_THREADS=@LIBOMP_USE_CANCEL_THREADS@ \
 	        -DLIBOMP_ENABLE_SHARED=Off; \
 	    $(MAKE) -C $(notdir $@)/openmp-static; \
 	    $(MAKE) -C $(notdir $@)/openmp-static install; \

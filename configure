@@ -633,6 +633,7 @@ with_gcc_src
 enable_strip_qemu
 install_target
 enable_host_gcc
+LIBOMP_USE_CANCEL_THREADS
 enable_llvm
 enable_gdb
 with_guile
@@ -739,6 +740,7 @@ with_system_zlib
 with_guile
 enable_gdb
 enable_llvm
+enable_libomp_pthread_cancel
 enable_host_gcc
 enable_strip
 with_gcc_src
@@ -1396,6 +1398,9 @@ Optional Features:
                           [--disable-gcc-checking]
   --disable-gdb           Don't build GDB, as it's not upstream
   --enable-llvm           Build LLVM (clang)
+  --disable-libomp-pthread-cancel
+                          Disable pthread_cancel in libomp (for systems
+                          lacking pthread_cancel support)
   --enable-host-gcc       Build host GCC to build cross toolchain
   --enable-strip          Strip debug symbols at install time
   --enable-libsanitizer   Build libsanitizer, which only supports rv64
@@ -4337,6 +4342,22 @@ then :
 
 else $as_nop
   enable_llvm=--disable-llvm
+
+fi
+
+# Check whether --enable-libomp-pthread-cancel was given.
+if test ${enable_libomp_pthread_cancel+y}
+then :
+  enableval=$enable_libomp_pthread_cancel;
+fi
+
+
+if test "x$enable_libomp_pthread_cancel" = xno
+then :
+  LIBOMP_USE_CANCEL_THREADS=OFF
+
+else $as_nop
+  LIBOMP_USE_CANCEL_THREADS=ON
 
 fi
 

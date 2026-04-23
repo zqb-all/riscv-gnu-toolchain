@@ -259,6 +259,14 @@ AS_IF([test "x$enable_llvm" = xyes],
 	[AC_SUBST(enable_llvm, --enable-llvm)],
 	[AC_SUBST(enable_llvm, --disable-llvm)])
 
+AC_ARG_ENABLE(libomp-pthread-cancel,
+	[AS_HELP_STRING([--disable-libomp-pthread-cancel],
+		[Disable pthread_cancel in libomp (for systems lacking pthread_cancel support)])])
+
+AS_IF([test "x$enable_libomp_pthread_cancel" = xno],
+	[AC_SUBST(LIBOMP_USE_CANCEL_THREADS, OFF)],
+	[AC_SUBST(LIBOMP_USE_CANCEL_THREADS, ON)])
+
 AC_ARG_ENABLE(host-gcc,
 	[AS_HELP_STRING([--enable-host-gcc],
 		[Build host GCC to build cross toolchain])])
