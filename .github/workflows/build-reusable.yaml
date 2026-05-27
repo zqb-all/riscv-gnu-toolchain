@@ -278,6 +278,13 @@ jobs:
           if [ -n "$ARTIFACT_NAME" ]; then
             ARTIFACT_NAME="-${ARTIFACT_NAME}"
           fi
+          CMODEL_SUFFIX=""
+          if [ -n "${{ matrix.cmodel }}" ]; then
+            CMODEL_SUFFIX="-${{ matrix.cmodel }}"
+          fi
+          BASE_NAME="riscv$BITS-$MODE-${{ matrix.os }}-${{ matrix.compiler }}${CMODEL_SUFFIX}"
+          echo "TOOLCHAIN_NAME=${BASE_NAME}${ARTIFACT_NAME}" >> $GITHUB_OUTPUT
+          echo "TOOLCHAIN_NAME_STRIPPED=${BASE_NAME}-stripped${ARTIFACT_NAME}" >> $GITHUB_OUTPUT
           BASE_NAME="riscv$BITS-$MODE-${{ matrix.os }}-${{ matrix.compiler }}"
           echo "TOOLCHAIN_NAME=${BASE_NAME}${ARTIFACT_NAME}" >> $GITHUB_OUTPUT
           echo "TOOLCHAIN_NAME_STRIPPED=${BASE_NAME}-stripped${ARTIFACT_NAME}" >> $GITHUB_OUTPUT
