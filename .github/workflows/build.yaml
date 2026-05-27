@@ -15,12 +15,6 @@ jobs:
     with:
       artifact-name: build
 
-  build-medany:
-    uses: ./.github/workflows/build-reusable.yaml
-    with:
-      artifact-name: build-medany
-      cmodel: '["medany"]'
-
   test-sim:
     uses: ./.github/workflows/build-reusable.yaml
     with:
