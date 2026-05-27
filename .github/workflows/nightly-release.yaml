@@ -55,6 +55,8 @@ jobs:
     needs: [activity-check]
     if: needs.activity-check.outputs.stale != 'true'
     uses: ./.github/workflows/build-reusable.yaml
+    with:
+      cmodel: '["", "medany"]'
 
   create-release:
     needs: [build]
