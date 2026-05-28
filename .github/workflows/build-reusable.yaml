@@ -116,7 +116,22 @@ jobs:
 
       - name: Checkout required submodules
         if: steps.smcache.outputs.cache-hit != 'true'
-        run: git submodule update --init -j $(nproc) --depth 1 $(echo ${submodule_paths} | sed '$d' | tr '\n' ' ')
+        run: |
+          # Git shallow clone (--depth 1) can only fetch:
+          # - Tags (e.g., binutils-2_46, gcc-16.1.0)
+          # - Branch HEADs (latest commit on a branch)
+          # But CANNOT fetch commits in the middle of history.
+          #
+          # The dejagnu submodule references commit 12ec17e7, which is
+          # 7 commits behind master HEAD (heads/master-7-g12ec17e).
+          # This commit is not a tag and not a branch HEAD, so shallow
+          # clone fails with "Server does not allow request for unadvertised object".
+          #
+          # Solution: Disable shallow clone for dejagnu in .gitmodules at runtime,
+          # then clone it. Keep shallow clone for other submodules for speed.
+          git config -f .gitmodules submodule.dejagnu.shallow false
+          git submodule update --init dejagnu
+          git submodule update --init -j $(nproc) --depth 1 binutils gcc gdb glibc llvm musl newlib pk qemu spike uclibc-ng
 
       - name: Storage size optimization
         if: steps.smcache.outputs.cache-hit != 'true'
