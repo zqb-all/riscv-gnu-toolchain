@@ -46,6 +46,10 @@ on:
         description: "Build simulator and include in the toolchain"
         type: boolean
         default: false
+      baremetal-multilib:
+        description: "Multilib generator string for baremetal (newlib) builds"
+        type: string
+        default: "rv32i-ilp32--c;rv32im-ilp32--c;rv32iac-ilp32--;rv32imac-ilp32--;rv32imafc-ilp32f-rv32imafdc-;rv64imac-lp64--;rv64imafdc-lp64d--;--cmodel;medany,large"
 
 env:
   submodule_paths: |
@@ -139,6 +143,8 @@ jobs:
         os: ${{ fromJSON(inputs.os) }}
         mode: ${{ fromJSON(inputs.mode) }}
         target: ${{ fromJSON(inputs.target) }}
+        baremetal-multilib:
+          - ${{ inputs.baremetal-multilib }}
         compiler: ${{ fromJSON(inputs.compiler) }}
         sim: ${{ fromJSON(inputs.sim) }}
         cmodel: ${{ fromJSON(inputs.cmodel) }}
@@ -198,6 +204,9 @@ jobs:
           ARGS=""
           if [ "${{ matrix.compiler }}" == "llvm" ]; then # build toolchain with llvm
             ARGS="$ARGS --enable-llvm"
+          fi
+          if [ "${{ matrix.compiler }}" != "llvm" ] && [ "${{ matrix.mode }}" == "newlib" ] && [ -n "${{ matrix.baremetal-multilib }}" ]; then
+            ARGS="$ARGS --with-multilib-generator=${{ matrix.baremetal-multilib }}"
           fi
           if [ -n "${{ matrix.sim }}" ]; then
             ARGS="$ARGS --with-sim=${{ matrix.sim }}"
